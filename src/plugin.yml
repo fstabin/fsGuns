@@ -1,0 +1,40 @@
+name: fsGuns
+version: 0.1.0
+main: fsGuns.fsGunsPlugin
+
+commands:
+  fsGuns:
+    description: fsGuns command.
+    usage: '/ : List fsGuns command'
+    
+permissions:
+  fsguns.*:
+    description: Gives access to all fsGuns commands
+    children:
+      fsguns.command.*: true
+      fsguns.fire: true
+  fsguns.command.*:
+    description: Gives access to all fsGuns commands
+    children:
+      fsguns.command.browse: true
+      fsguns.command.workbench: true
+      fsguns.command.set_firemode: true
+      fsguns.command.reload: true
+  fsguns.command.browse:
+    description: Enable to use browse command
+    default: op
+  fsguns.command.workbench:
+    description: Enable to use workbench command
+    default: op
+  fsguns.command.set_firemode:
+    description: Enable to set limit
+    default: op
+  fsguns.command.reload:
+    description: Enable to reload
+    default: op
+  fsguns.fire:
+    description: Enable to fire
+    default: op
+
+    
+    
