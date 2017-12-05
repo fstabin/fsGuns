@@ -34,7 +34,7 @@ public class ShooterManager{
 			Player pl = entry.getKey();
 			Gun wp = entry.getValue();
 			if(wp.getCoolDownNow()) {
-				if(wp.calcCoolDownNow())continue;
+				if(wp.calcCoolDownNow())continue;	
 			}
 			else {
 				if(pl.isOnline()) {
@@ -51,10 +51,10 @@ public class ShooterManager{
 							dir.multiply(-gp.Recoil);
 							pl.setVelocity(dir.add(pl.getVelocity()));
 						}
-						if(!pl.hasMetadata(plugin.getName() + ":fire_unlimited"))wp.Fired(fc);
+						wp.Fired(fc, !pl.hasMetadata(plugin.getName() + ":fire_unlimited"));
 						continue;
 					}
-					if(wp.isEmpty())stopFire(pl);
+					if(wp.isEmpty() || wp.getCoolDownNow())stopFire(pl);
 					continue;
 				}
 			}

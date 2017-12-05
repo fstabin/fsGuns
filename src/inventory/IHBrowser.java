@@ -49,12 +49,13 @@ public class IHBrowser implements InventoryHanger {
 	
 	static int BrowseSize = 9 * 6;
 	
-	static int BrowseClientLT = 9;
-	static int BrowseClientRB = 9 * 5 - 1;
+	static int BrowseClientLT = 9;//left top
+	static int BrowseClientRB = 9 * 5 - 1;//right bottom
 	
 	public IHBrowser(InventoryUtil iu,Info_Manager info) {
 		util = iu;
 		
+		//create buttons (item)
 		ItemMeta meta = null;
 		
 		isFrame = new ItemStack(Material.STICK);
@@ -72,13 +73,19 @@ public class IHBrowser implements InventoryHanger {
 		meta.setDisplayName("Bullet");
 		isBullet.setItemMeta(meta);
 		
+		//create top page
 		browseTop = Bukkit.createInventory(null, BrowseSize, Name);
 		browseTop.setItem(9 * 2 + 3, isFrame);
 		browseTop.setItem(9 * 2 + 4, isAccessory);
 		browseTop.setItem(9 * 2 + 5, isBullet);
-		SetButton(browseTop, "Top", 0);
+		SetMenu(browseTop, "Top", 0);
 		FillInventory(browseTop);
 		
+		Reset(info);
+	}
+
+	public void Reset(Info_Manager info) {
+		//create other pages
 		browseFrame = new ArrayList<Inventory>();
 		browseAccessory = new ArrayList<Inventory>();
 		browseBullet = new ArrayList<Inventory>();
@@ -91,13 +98,14 @@ public class IHBrowser implements InventoryHanger {
 				if(inv != null)FillInventory(inv);
 				inv = Bukkit.createInventory(null, BrowseSize, Name);
 				browseFrame.add(inv);
-				SetButton(inv, "Frame", browseFrame.size());
+				SetMenu(inv, "Frame", browseFrame.size());
 			}
 			ItemSource s = new ItemGun(a.getValue());
 			inv.setItem(i, s.createItemStack());
 			i++;
 		}
 		if(inv != null)FillInventory(inv);
+		
 		i = BrowseClientRB + 1;
 		for(Map.Entry<String, InfoAccessory> a:info.getAccessoryEntrySet()) {
 			if(i > BrowseClientRB) {
@@ -105,7 +113,7 @@ public class IHBrowser implements InventoryHanger {
 				if(inv != null)FillInventory(inv);
 				inv = Bukkit.createInventory(null, BrowseSize, Name);
 				browseAccessory.add(inv);
-				SetButton(inv, "Accessory", browseAccessory.size());
+				SetMenu(inv, "Accessory", browseAccessory.size());
 			}
 			ItemSource s = null;
 			if(a.getValue() instanceof InfoMagazine) {
@@ -117,6 +125,7 @@ public class IHBrowser implements InventoryHanger {
 			i++;
 		}
 		if(inv != null)FillInventory(inv);
+		
 		i = BrowseClientRB + 1;
 		for(Map.Entry<String, InfoBullet> a:info.getBulletEntrySet()) {
 			if(i > BrowseClientRB) {
@@ -124,7 +133,7 @@ public class IHBrowser implements InventoryHanger {
 				if(inv != null)FillInventory(inv);
 				inv = Bukkit.createInventory(null, BrowseSize, Name);
 				browseBullet.add(inv);
-				SetButton(inv, "Bullet", browseBullet.size());
+				SetMenu(inv, "Bullet", browseBullet.size());
 			}
 			ItemSource s = new ItemBullet(a.getValue());
 			inv.setItem(i, s.createItemStack());
@@ -133,10 +142,11 @@ public class IHBrowser implements InventoryHanger {
 		if(inv != null)FillInventory(inv);
 	}
 
-	private void SetButton(Inventory inv, String title, int page) {
+	private void SetMenu(Inventory inv, String title, int page) {
 		ItemStack is = null;
 		ItemMeta meta = null;
 				
+		//set title item
 		is = new ItemStack(Material.ENDER_PEARL);
 		meta = is.getItemMeta();
 		meta.setDisplayName(title);
@@ -145,6 +155,7 @@ public class IHBrowser implements InventoryHanger {
 		
 		inv.setItem(0, is);
 		
+		//set button items
 		inv.setItem(BrowsePrev, util.isPrev);
 		inv.setItem(BrowseClose, util.isClose);
 		inv.setItem(BrowseNext, util.isNext);
@@ -167,10 +178,6 @@ public class IHBrowser implements InventoryHanger {
 				inv.setItem(i, util.isHeader);
 			}
 		}
-	}
-	
-	public void onReload() {
-	
 	}
 	
 	public Inventory getBrowseTop() {
@@ -213,18 +220,24 @@ public class IHBrowser implements InventoryHanger {
 
 	@Override
 	public void onClicked(InventoryClickEvent event) {
+		int rawSlot = event.getRawSlot();
+		//clicked out of browse
+		if(rawSlot < 0 || BrowseSize <= rawSlot)return;
+		
+		//clicked browse
 		event.setCancelled(true);
 		String title = null;
 		int page = 0;
 		ItemStack it = event.getInventory().getItem(0);
 		if(it != null) {
+			//get page title
 			title = it.getItemMeta().getDisplayName();
 			List<String>l = it.getItemMeta().getLore();
 			if(l != null)page = Integer.parseInt(l.get(0));
 		}
 		ItemStack is = event.getCurrentItem();
 		if(is != null && title != null && event.getClick() == ClickType.LEFT) {
-			if(isClient(event.getRawSlot())) {
+			if(isClient(rawSlot)) {
 				if(is.isSimilar(util.isBack)) {
 					
 				}
@@ -240,9 +253,10 @@ public class IHBrowser implements InventoryHanger {
 					Inventory newInv = this.getBrowsePage("Bullet", 1);
 					if(newInv != null)event.getWhoClicked().openInventory(newInv);
 				}else {
+					//give item
 					event.getWhoClicked().getInventory().addItem(is);
 				}
-			}else if(this.isMenu(event.getRawSlot())) {
+			}else if(this.isMenu(rawSlot)) {
 				if(is.isSimilar(util.isPrev)) {
 					Inventory newInv = this.getBrowsePage(title, page + 1);
 					if(newInv != null)event.getWhoClicked().openInventory(newInv);
@@ -258,14 +272,14 @@ public class IHBrowser implements InventoryHanger {
 					Inventory newInv = this.getBrowsePage("Top", 0);
 					if(newInv != null)event.getWhoClicked().openInventory(newInv);
 				}
-			}else {
-				event.setCancelled(false);
 			}
 		}
+		
 	}
 
 	@Override
 	public void onDraged(InventoryDragEvent event) {
+		//cancel when drag on browse area
 		Set<Integer>e =  event.getRawSlots();
 		for(int i = 0;i < BrowseSize;i++) {
 			if(e.contains(i)) {
@@ -277,7 +291,6 @@ public class IHBrowser implements InventoryHanger {
 
 	@Override
 	public void onClose(InventoryCloseEvent event) {
-		// TODO Auto-generated method stub
 		
 	}
 }

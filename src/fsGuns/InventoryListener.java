@@ -1,5 +1,6 @@
 package fsGuns;
 
+import org.bukkit.Material;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,17 +19,17 @@ import fsGuns.recipe.RecipeHanger;
 import fsGuns.recipe.RecipeHanger_Manager;
 import inventory.InventoryHanger;
 
-public class GuiListener implements Listener {
+public class InventoryListener implements Listener {
 	static int iFrameloc = 1;
 	static int iRow = 9;
 	static int iMagloc = iRow * 2;
 	static int iInvSize = iRow * 3;
 	
 	Plugin plugin;
-	GuiManager manager;
+	InventoryManager manager;
 	Info_Manager acmng;
 	RecipeHanger_Manager rhmng;
-	public GuiListener(Plugin pl, GuiManager gmng,Info_Manager ac,RecipeHanger_Manager rhm) {
+	public InventoryListener(Plugin pl, InventoryManager gmng,Info_Manager ac,RecipeHanger_Manager rhm) {
 		plugin = pl;
 		manager = gmng;
 		acmng = ac;
@@ -65,13 +66,18 @@ public class GuiListener implements Listener {
 	@EventHandler
 	public void onCraft(CraftItemEvent event){
 		Recipe re = event.getRecipe();
-		if(re != null && event.getResult() != Result.DENY) {
+		if(re != null && event.getResult() != Result.DENY && !event.isCancelled()) {
 			if(re instanceof ShapelessRecipe) {
 				ShapelessRecipe sr = (ShapelessRecipe)re;
 				RecipeHanger rh = rhmng.getRecipeHanger(sr.getKey());
 				if(rh != null) {
-					boolean b = rh.onCraft(event.getInventory());
-					if(!b)event.setCancelled(true);
+					//when probably cancel
+					if((!event.isShiftClick()) && ((event.getCursor() != null) ? (event.getCursor().getType() != Material.AIR) : (false))) {
+						event.setCancelled(true);
+					}else {
+						boolean b = rh.onCraft(event.getInventory());
+						if(!b)event.setCancelled(true);
+					}
 				}
 			}
 		}

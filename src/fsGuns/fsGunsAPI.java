@@ -1,7 +1,8 @@
 package fsGuns;
 
-import org.bukkit.inventory.ItemStack;
+//import org.bukkit.inventory.ItemStack;
 
 public interface fsGunsAPI {
-	ItemStack createfsGunsItem();
+	//unused
+	//ItemStack createfsGunsItem();
 }

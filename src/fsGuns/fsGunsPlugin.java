@@ -8,7 +8,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,7 +21,7 @@ import fsGuns.ExRecipe;
 public class fsGunsPlugin extends JavaPlugin implements fsGunsAPI{
 	private ShooterManager shooterManager;
 	private Info_Manager accessoryManager;
-	private GuiManager guiManager;
+	private InventoryManager guiManager;
 	private BulletManager bulletManager;
 	private RecipeHanger_Manager rhMng;
 	
@@ -103,6 +102,7 @@ public class fsGunsPlugin extends JavaPlugin implements fsGunsAPI{
 				if(args.length == 1) {
 					if(hasPermission.test(Permissions.command_reload)){
 						accessoryManager.reload(this);
+						guiManager.onReload(accessoryManager);
 						sender.sendMessage("ÉäÉçÅ[ÉhäÆóπ!!");			
 					}
 			        return true;
@@ -142,26 +142,30 @@ public class fsGunsPlugin extends JavaPlugin implements fsGunsAPI{
 
 	@Override
 	public void onDisable() {
+		//clean up
+		bulletManager.clearBullet();
 	}
 
 	@Override
 	public void onEnable() {
+		//set up
 		util.Init();
 		accessoryManager = new Info_Manager(this);
 		bulletManager = new BulletManager();
 		shooterManager = new ShooterManager(this, accessoryManager, bulletManager);
 		rhMng = new RecipeHanger_Manager();
-		guiManager = new GuiManager(this, accessoryManager);
+		guiManager = new InventoryManager(this, accessoryManager);
 		ExRecipe.CreateRecipe(this, accessoryManager, rhMng);
+		//regist listeners
 		getServer().getPluginManager().registerEvents(new ShooterListener(this, shooterManager), this);
-		getServer().getPluginManager().registerEvents(new GuiListener(this, guiManager, accessoryManager, rhMng), this);
+		getServer().getPluginManager().registerEvents(new InventoryListener(this, guiManager, accessoryManager, rhMng), this);
 		getServer().getPluginManager().registerEvents(new BulletListener(this, bulletManager), this);
 		
 		new Runner(this,shooterManager,bulletManager);	
 	}
 		
-	@Override
-	public ItemStack createfsGunsItem() {
-		return null;
-	}
+	//@Override
+	//public ItemStack createfsGunsItem() {
+	//	return null;
+	//}
 }

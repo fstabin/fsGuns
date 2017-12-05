@@ -87,7 +87,7 @@ public class BulletManager {
 						this.addBullet(new EntityBullet(sb, ib, gp.Damage, gp.EffectiveTick, gp.MaximumTick));
 					}
 				}
-				wor.playSound(loc,Sound.BLOCK_COMPARATOR_CLICK,1, 5);
+				wor.playSound(loc,Sound.ENTITY_GENERIC_EXPLODE ,1, 1f);
 			}
 		}
 	}
@@ -105,4 +105,11 @@ public class BulletManager {
 		return met.get(e);
 	}
 	
+	public void clearBullet() {
+		for (Map.Entry<Entity, EntityBullet> entry : met.entrySet()) {
+			Entity et = entry.getKey();
+			et.remove();
+		}
+		met.clear();
+	}
 }

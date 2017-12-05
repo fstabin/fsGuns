@@ -13,14 +13,14 @@ import inventory.IHWorkBench;
 import inventory.InventoryHanger;
 import inventory.InventoryUtil;
 
-public class GuiManager {
+public class InventoryManager {
 	
 	InventoryUtil iutil;
 	IHBrowser browser;
 	
 	Map<String, InventoryHanger> mrec;
 	
-	public GuiManager(Plugin pl, Info_Manager im) {
+	public InventoryManager(Plugin pl, Info_Manager im) {
 		mrec = new HashMap<String, InventoryHanger>();
 		iutil = new InventoryUtil();
 		this.addInventoryHanger(browser = new IHBrowser(iutil, im));
@@ -47,4 +47,7 @@ public class GuiManager {
 		return false;
 	}
 	
+	public void onReload(Info_Manager im) {
+		browser.Reset(im);
+	}
 }

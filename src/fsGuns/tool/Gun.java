@@ -133,11 +133,13 @@ public class Gun {
 		return perf;
 	}
 	
-	public void Fired(int launched) {
-		Remaining -= launched;
+	public void Fired(int launched, boolean consumed) {		
 		if(fireable != -1)fireable -= launched;
-		meta.setDisplayName(ItemName + ChatColor.GRAY  + "<" + String.valueOf(Remaining) + "/" + String.valueOf(MagazineSize) + ">");
-		is.setItemMeta(meta);
+		if(consumed) {
+			Remaining -= launched;
+			meta.setDisplayName(ItemName + ChatColor.GRAY  + "<" + String.valueOf(Remaining) + "/" + String.valueOf(MagazineSize) + ">");
+			is.setItemMeta(meta);
+		}
 		return;
 	}
 	
