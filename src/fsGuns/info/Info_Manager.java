@@ -40,9 +40,9 @@ public class Info_Manager {
 	
 	private List<PotionEffect> loadPotionSection(Plugin pl,ConfigurationSection p) {
 		if(p != null) {
-			Set<String> keys = p.getKeys(false);
+			Set<String> keys = p.getKeys(false);//key is potion name
 			if(keys.size() > 0) {
-				List<PotionEffect>  l = new ArrayList<PotionEffect>(keys.size());
+				List<PotionEffect> l = new ArrayList<PotionEffect>(keys.size());
 				for (String ptname : keys) {
 					ConfigurationSection ptisec = p.getConfigurationSection(ptname);
 					PotionEffectType pt = PotionEffectType.getByName(ptname);
@@ -59,27 +59,26 @@ public class Info_Manager {
 	}
 	
 	protected void LoadAccessoryYML(Plugin pl){
+		//open YAML file
 		File f = new File(pl.getDataFolder(), "accessory.yml");
 		FileConfiguration config = YamlConfiguration.loadConfiguration(f);
-				
+		
+		//lead all accessory item sections
 		for (String key : config.getConfigurationSection("accessory").getKeys(false)) {
 			ConfigurationSection isec = config.getConfigurationSection("accessory." + key);
 			
-			String Name = key;
+			String Name = key; //unique item name
 			boolean isMag = false;
 			String slotName = null;
 			GunPerformance gp;
 			String CartridgeName = null;
 			int Cap = 0;
 			
+			//load magazine flag
 			isMag = isec.contains("isMag", false);	
-			if(!isMag) {
-				if(!isec.contains("slotName")) {
-					pl.getLogger().log(Level.WARNING, "not found section(Accessory.yml item." + key + ".slotName)");
-					continue;
-				}
-				slotName = isec.getString("slotName");
-			}else {
+			
+			if(isMag) {
+				//on magazine
 				if(isec.contains("cartridgeName")) {
 					CartridgeName = isec.getString("cartridgeName");
 				}else {
@@ -87,14 +86,24 @@ public class Info_Manager {
 					continue;
 				}
 				Cap = isec.getInt("capacity",100);
-			}
-			if(!isec.contains("performance")) {
-				pl.getLogger().log(Level.WARNING, "not found section(Accessory.yml item." + key + ".performance)");
-				continue;
 			}else {
-				gp = loadPerformanceSection(isec.getConfigurationSection("performance"));
+				//on others
+				if(!isec.contains("slotName")) {
+					pl.getLogger().log(Level.WARNING, "not found section(Accessory.yml item." + key + ".slotName)");
+					continue;
+				}
+				slotName = isec.getString("slotName");
 			}
 			
+			//load performance
+			ConfigurationSection performanceSection = isec.getConfigurationSection("performance");
+			if(performanceSection != null) {
+				gp = loadPerformanceSection(performanceSection);
+			}else {
+				gp = new GunPerformance();
+			}
+			
+			//create/set InfoAccessory or InfoMagazine
 			InfoAccessory ac = null;
 			if(isMag) {
 				ac = new InfoMagazine(Name,CartridgeName, gp, Cap);
@@ -106,20 +115,27 @@ public class Info_Manager {
 	}
 	
 	protected void LoadFrameYML(Plugin pl){
+		//open YAML file
 		File f = new File(pl.getDataFolder(), "frame.yml");
 		FileConfiguration config = YamlConfiguration.loadConfiguration(f);
 				
+		//lead all frame item sections
 		for (String key : config.getConfigurationSection("frame").getKeys(false)) {
 			ConfigurationSection isec = config.getConfigurationSection("frame." + key);
 			
-			String Name = key;
+			String Name = key;  //unique item name
 			String CartridgeName = null;
 			List<String> slots = new ArrayList<String>();
 			GunPerformance gp;
 			FireMode mode = new FireMode();
 			
+			//load cartridge Name
 			CartridgeName = isec.getString("cartridgeName");
+			
+			//load slots name list
 			slots = isec.getStringList("slots");
+			
+			//load performance
 			if(!isec.contains("performance")) {
 				pl.getLogger().log(Level.WARNING, "not found section(frame.yml item." + key + ".performance)");
 				continue;
@@ -127,22 +143,30 @@ public class Info_Manager {
 				gp = loadPerformanceSection(isec.getConfigurationSection("performance"));
 			}
 			
-			mode.type = ModeType.valueOf(isec.getString("mode.type","FULLAUTO"));
-			if(mode.type == null)mode.type = ModeType.FULLAUTO;
+			//load mode
+			try {
+				mode.type = ModeType.valueOf(isec.getString("mode.type","FULLAUTO"));
+			} catch(IllegalArgumentException e){
+				mode.type =  ModeType.FULLAUTO;
+			}
 			mode.MaxFireCount = isec.getInt("mode.count",1);
 			
+			//create/set InfoFrame
 			InfoFrame fm =  new InfoFrame(Name, CartridgeName, slots, gp, mode);
 			addFrame(fm);
 		}
 	}
 	
 	protected void LoadBulletYML(Plugin pl){
+		//open YAML file
 		File f = new File(pl.getDataFolder(), "bullet.yml");
 		FileConfiguration config = YamlConfiguration.loadConfiguration(f);
 		
+		//load all bullet item sections
 		for (String key : config.getConfigurationSection("bullet").getKeys(false)) {
 			ConfigurationSection isec = config.getConfigurationSection("bullet." + key);
-			String Name = key;
+			
+			String Name = key; //unique item name
 			String CartridgeName = null;
 			GunPerformance gp;
 			ExplosionPerformance ep = null;
@@ -152,23 +176,34 @@ public class Info_Manager {
 			List<PotionEffect> llp;//crowd
 			int cnt;
 			
+			//load cartridge Name
 			CartridgeName = isec.getString("cartridgeName");
-			if(!isec.contains("performance")) {
-				pl.getLogger().log(Level.WARNING, "not found section(frame.yml item." + key + ".performance)");
-				continue;
+			
+			//load performance
+			ConfigurationSection performanceSection = isec.getConfigurationSection("performance");
+			if(performanceSection != null) {
+				gp = loadPerformanceSection(performanceSection);
 			}else {
-				gp = loadPerformanceSection(isec.getConfigurationSection("performance"));
+				gp = new GunPerformance();
 			}
+			
+			//load explosion
 			if(isec.contains("explosion")) {
 				ep = new ExplosionPerformance((float)isec.getDouble("explosion.power", 1), isec.getBoolean("explosion.setfire", false));
 			}
+			//load flame
 			if(isec.contains("flame")) {
 				fp = new FlamePerformance(isec.getInt("flame.tick", 1));
 			}
+			//load potion effects (hit, splash, lingering)
 			lpp = loadPotionSection(pl,isec.getConfigurationSection("potionEffect"));
 			lsp = loadPotionSection(pl,isec.getConfigurationSection("splashPotionEffect"));
 			llp = loadPotionSection(pl,isec.getConfigurationSection("lingeringPotionEffect"));
+					
+			//the number of arrow
 			cnt = isec.getInt("count",1);
+			
+			//create/set InfoBullet
 			InfoBullet ni =  new InfoBullet(Name, CartridgeName, gp, ep, fp, lpp,lsp,llp,cnt);
 			addBullet(ni);
 		}

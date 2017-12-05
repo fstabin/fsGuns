@@ -1,0 +1,40 @@
+accessory:
+  # accessory's UNIQUE name
+  TestMagazine:
+    # (OPTIONAL: default = false) set true if it's magazine
+    isMag: true
+    # (REQUIRED when isMag is true) this item can contain this cartridge only
+    cartridgeName: TestCartridge
+    # (REQUIRED when isMag is true)
+    capacity: 30
+    # (OPTIONAL) performance modifier
+    performance:
+      # (OPTIONAL: default = 1)
+      damage: 1
+      # (OPTIONAL: default = 1)
+      RPM: 1
+      # (OPTIONAL: default = 1)
+      effectiveTick: 1
+      # (OPTIONAL: default = 1)
+      maximumTick: 1
+      # (OPTIONAL: default = 1)
+      muzzleVelocity: 1
+      # (OPTIONAL: default = 1)
+      recoil: 1
+      # (OPTIONAL: default = 1)
+      spreading:  1
+  TestShellMagazine:
+    isMag: true
+    cartridgeName: TestShell
+    capacity: 5
+    performance:
+  TestBarrel:
+    # (REQUIRED when isMag is false)
+    slotName: testslot-barrel
+    performance:
+      muzzleVelocity: 1.3
+  TestGrip:
+    slotName: testslot-grip
+    performance:
+      recoil: 0.8
+      spreading: 0.8

@@ -34,7 +34,7 @@ permissions:
     default: op
   fsguns.fire:
     description: Enable to fire
-    default: op
+    default: true
 
     
     

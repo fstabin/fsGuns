@@ -1,0 +1,39 @@
+frame:
+  # frame's UNIQUE name
+  TestGun:
+    # (REQUIRED) set consume cartridge type
+    cartridgeName: TestCartridge
+    # (REQUIRED) custom slot list
+    slots:
+      - "testslot-barrel"
+      - "testslot-grip"
+    # (REQUIRED) performance base value
+    performance:
+      damage: 10
+      RPM: 600
+      effectiveTick: 50
+      maximumTick: 100
+      muzzleVelocity: 10
+      recoil: 0.025
+      spreading:  0.030
+    # (OPTIONAL: default = {type = FULLAUTO})
+    mode:
+      # (OPTIONAL: default = FULLAUTO)
+      # FULLAUTO or BURST or SEMIAUTO
+      type: FULLAUTO
+      # (OPTIONAL: default = 1) mux burst count
+      count: 3
+    
+  TestShotgun:
+    cartridgeName: TestShell
+    slots:
+    performance:
+      damage: 10
+      RPM: 60
+      effectiveTick: 50
+      maximumTick: 100
+      muzzleVelocity: 10
+      recoil: 0.050
+      spreading:  0.030
+    mode:
+      type: SEMIAUTO

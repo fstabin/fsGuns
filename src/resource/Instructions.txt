@@ -1,0 +1,16 @@
+Permissions
+  fsguns.command.browse:
+    description: Enable to use browse command
+    default: op
+  fsguns.command.workbench:
+    description: Enable to use workbench command
+    default: op
+  fsguns.command.set_firemode:
+    description: Enable to set limit
+    default: op
+  fsguns.command.reload:
+    description: Enable to reload
+    default: op
+  fsguns.fire:
+    description: Enable to fire
+    default: true

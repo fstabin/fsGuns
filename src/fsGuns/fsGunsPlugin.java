@@ -28,18 +28,21 @@ public class fsGunsPlugin extends JavaPlugin implements fsGunsAPI{
 	@Override 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		Predicate<String> hasPermission = (permission)->{
+			//display message when don't have enough permissions
 			if(!sender.hasPermission((String) permission)) {
-				sender.sendMessage(ChatColor.RED + "権限が不足しています。[" + permission + "]");
+				sender.sendMessage(ChatColor.RED + "You don't have enough permissions.[" + permission + "]");
 				return false;
 			}
 			return true;
 		};
 		if(command.getName().contentEquals("fsGuns")) {
 			if(args.length == 0) {
+				//display plugin info
 				sender.sendMessage(ChatColor.YELLOW + "[fsGuns] version [" + this.getDescription().getVersion() + "]");
 				return true;
 			}
 			else if(args[0].contentEquals(Commands.workbench)) {
+				//open workbench command
 				if(args.length == 1) {
 					if (sender instanceof Player) {
 						Player pl = (Player) sender;
@@ -48,11 +51,12 @@ public class fsGunsPlugin extends JavaPlugin implements fsGunsAPI{
 						}
 						return true;
 				    }  
-					sender.sendMessage(ChatColor.RED + "プレイヤーがゲーム内で実行してください！");
+					sender.sendMessage(ChatColor.RED + "Only players in game can use this command.");
 					return true;
 				}
 			}
 			else if(args[0].contentEquals(Commands.browse)) {
+				//open browse command
 				if(args.length == 1) {
 					if (sender instanceof Player) {
 						Player pl = (Player) sender;
@@ -61,7 +65,7 @@ public class fsGunsPlugin extends JavaPlugin implements fsGunsAPI{
 						}
 						return true;
 				    }  
-					sender.sendMessage(ChatColor.RED + "プレイヤーがゲーム内から実行してください！");
+					sender.sendMessage(ChatColor.RED + "Only players in game can use this command.");
 			        return true;
 				}
 			}
@@ -85,12 +89,12 @@ public class fsGunsPlugin extends JavaPlugin implements fsGunsAPI{
 					if(args[1].contentEquals("limited")) {
 						if(pl.hasMetadata(this.getName() + ":fire_unlimited")) {
 							pl.removeMetadata(this.getName() + ":fire_unlimited", this);
-							sender.sendMessage("プレイヤー[" + pl.getName() + "]に射撃モード[limited]を適用しました");
+							sender.sendMessage("chenged player[" + pl.getName() + "]'s fire_limitmode to [limited].");
 						}
 					}
 					else if(args[1].contentEquals("unlimited")) {
 						pl.setMetadata(this.getName() + ":fire_unlimited", new FixedMetadataValue(this, null));
-						sender.sendMessage("プレイヤー[" + pl.getName() + "]に射撃モード[unlimited]を適用しました");						
+						sender.sendMessage("chenged player[" + pl.getName() + "]'s fire_limitmode to [unlimited].");						
 					}else {
 						usage_outer.run();
 						return true;
@@ -101,9 +105,10 @@ public class fsGunsPlugin extends JavaPlugin implements fsGunsAPI{
 			else if(args[0].contentEquals(Commands.reload)) {
 				if(args.length == 1) {
 					if(hasPermission.test(Permissions.command_reload)){
+						FileChecker.checkAndGenerate(this, this.getDataFolder());
 						accessoryManager.reload(this);
 						guiManager.onReload(accessoryManager);
-						sender.sendMessage("リロード完了!!");			
+						sender.sendMessage(ChatColor.GREEN + "fsGuns Config Reloading finished!!");			
 					}
 			        return true;
 				}
@@ -149,6 +154,7 @@ public class fsGunsPlugin extends JavaPlugin implements fsGunsAPI{
 	@Override
 	public void onEnable() {
 		//set up
+		FileChecker.checkAndGenerate(this, this.getDataFolder());
 		util.Init();
 		accessoryManager = new Info_Manager(this);
 		bulletManager = new BulletManager();

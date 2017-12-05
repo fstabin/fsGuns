@@ -1,0 +1,61 @@
+bullet:
+  # bullet's UNIQUE name
+  TestBullet:
+    # (REQUIRED)
+    cartridgeName: TestCartridge
+    # # (OPTIONAL: default = 1) the number of bullet summoned on fire
+    count: 1
+    # (OPTIONAL) performance modifier
+    performance: 
+      # (OPTIONAL: default = 1)
+      damage: 1
+      # (OPTIONAL: default = 1)
+      RPM: 1
+      # (OPTIONAL: default = 1)
+      effectiveTick: 1
+      # (OPTIONAL: default = 1)
+      maximumTick: 1
+      # (OPTIONAL: default = 1)
+      muzzleVelocity: 1
+      # (OPTIONAL: default = 1)
+      recoil: 1
+      # (OPTIONAL: default = 1)
+      spreading:  1
+    # (OPTIONAL) create explosion on hit
+    explosion:
+      # (REQUIRED)
+      power: 1
+      # (REQUIRED)
+      setfire: false
+    # (OPTIONAL) flame to hit entity
+    flame:
+      # (REQUIRED)
+      tick: 100
+    # (OPTIONAL) set potioneffect to hit entity
+    potionEffect:
+      GLOWING:
+        # (REQUIRED) tick length of effect lasting
+        tick: 100
+        # (REQUIRED) effect level - 1
+        amplifier: 0
+    # (OPTIONAL) spawn splashpotion on hit
+    splashPotionEffect:
+      POISON:
+        tick: 100
+        amplifier: 1
+    # (OPTIONAL) spawn lingeringpotion on hit
+    lingeringPotionEffect:
+      HEAL:
+        tick: 100
+        amplifier: 1
+  
+  TestShell:
+    cartridgeName: TestShell
+    count: 15
+    performance: 
+      damage: 0.10
+      effectiveTick: 0.5
+      maximumTick: 0.8
+      spreading:  3.5
+
+#EOF
