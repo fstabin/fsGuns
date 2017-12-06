@@ -27,7 +27,6 @@ accessory:
     isMag: true
     cartridgeName: TestShell
     capacity: 5
-    performance:
   TestBarrel:
     # (REQUIRED when isMag is false)
     slotName: testslot-barrel

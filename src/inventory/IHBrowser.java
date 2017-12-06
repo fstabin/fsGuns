@@ -70,7 +70,7 @@ public class IHBrowser implements InventoryHanger {
 		
 		isBullet = new ItemStack(Material.GOLD_NUGGET);
 		meta = isBullet.getItemMeta();
-		meta.setDisplayName("Bullet");
+		meta.setDisplayName("Armo");
 		isBullet.setItemMeta(meta);
 		
 		//create top page
@@ -133,7 +133,7 @@ public class IHBrowser implements InventoryHanger {
 				if(inv != null)FillInventory(inv);
 				inv = Bukkit.createInventory(null, BrowseSize, Name);
 				browseBullet.add(inv);
-				SetMenu(inv, "Bullet", browseBullet.size());
+				SetMenu(inv, "Armo", browseBullet.size());
 			}
 			ItemSource s = new ItemBullet(a.getValue());
 			inv.setItem(i, s.createItemStack());

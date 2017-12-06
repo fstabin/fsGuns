@@ -1,3 +1,24 @@
+what is it?
+	add customizable guns(stick) and some items.
+	stick consume armo.
+	player can customize gun.
+	
+How to set up gun?
+	1.open guns browser. (using fsGuns browser command.)
+	2.click item on browser and get clicked item.
+	3.combine armo's and magazine(amount = 1).
+	4.combine magazine and frame.
+	  
+How to use gun?
+	begin fire - take gun(reloaded) and left click when sneak.
+	stop fire - left click again, toggle sneak or current item.
+
+Commands
+	fsGuns browse - open guns browser
+	fsGuns workbench - open guns workbench
+	fsGuns set_firemode <mode(limited/unlimited)> <player(optional)> - set player's fire mode
+	fsGuns reload - reload plugin resources
+
 Permissions
   fsguns.command.browse:
     description: Enable to use browse command
@@ -14,3 +35,6 @@ Permissions
   fsguns.fire:
     description: Enable to fire
     default: true
+    
+SourceCode
+	https://github.com/fstabin/fsGuns
