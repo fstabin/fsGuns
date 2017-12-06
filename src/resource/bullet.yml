@@ -4,7 +4,7 @@ bullet:
     # (REQUIRED)
     cartridgeName: TestCartridge
     # # (OPTIONAL: default = 1) the number of bullet summoned on fire
-    count: 1
+    amount: 1
     # (OPTIONAL) performance modifier
     performance: 
       # (OPTIONAL: default = 1)
@@ -51,7 +51,7 @@ bullet:
   
   TestShell:
     cartridgeName: TestShell
-    count: 15
+    amount: 15
     performance: 
       damage: 0.10
       effectiveTick: 0.5

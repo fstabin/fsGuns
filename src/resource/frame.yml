@@ -22,7 +22,7 @@ frame:
       # FULLAUTO or BURST or SEMIAUTO
       type: FULLAUTO
       # (OPTIONAL: default = 1) mux burst count
-      count: 3
+      amount: 3
     
   TestShotgun:
     cartridgeName: TestShell

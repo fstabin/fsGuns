@@ -149,7 +149,7 @@ public class Info_Manager {
 			} catch(IllegalArgumentException e){
 				mode.type =  ModeType.FULLAUTO;
 			}
-			mode.MaxFireCount = isec.getInt("mode.count",1);
+			mode.MaxFireCount = isec.getInt("mode.amount",1);
 			
 			//create/set InfoFrame
 			InfoFrame fm =  new InfoFrame(Name, CartridgeName, slots, gp, mode);
@@ -201,7 +201,7 @@ public class Info_Manager {
 			llp = loadPotionSection(pl,isec.getConfigurationSection("lingeringPotionEffect"));
 					
 			//the number of arrow
-			cnt = isec.getInt("count",1);
+			cnt = isec.getInt("amount",1);
 			
 			//create/set InfoBullet
 			InfoBullet ni =  new InfoBullet(Name, CartridgeName, gp, ep, fp, lpp,lsp,llp,cnt);
